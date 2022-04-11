@@ -1,0 +1,33 @@
+version: '3.8'
+
+networks:
+  lan:
+    driver: bridge
+
+services:
+  nginx:
+    container_name: nginx
+    image: nginx:${NGINX_VERSION}
+    restart: always
+    ports:
+      - "${NGINX_PORT}:80"
+      - "${NGINX_PORT_TLS}:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./var/www:/var/www
+      - ./etc/letsencrypt:/etc/letsencrypt
+    networks:
+      - lan
+    depends_on:
+      - web_1
+
+  web_1:
+    image: icutech_web:latest
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+    build:
+      context: .
+      dockerfile: ./IcuTech.Web/Dockerfile
+    restart: always
+    networks:
+      - lan
