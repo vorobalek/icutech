@@ -48,7 +48,7 @@ public class IndexModel : PageModel
     {
         var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
 
-        _logger.LogInformation($"{ip}, {Input.Login}");
+        _logger.LogWarning($"{ip}, {Input.Login}");
         
         var response = await _icuTechApiClient.LoginAsync(new LoginRequest
         {
